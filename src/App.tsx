@@ -1,24 +1,30 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { AddArticleForm, ArticleList, Navbar } from './components';
+import { Article } from './interfaces';
 
 function App() {
+  const [articles, setArticles] = React.useState<Article[]>([]);
+
+  const addArticle = (article: Article) => {
+    setArticles(prev=>prev.concat(article));
+  };
+  const removeArticle = (id: number) => {
+    setArticles(prev => prev.filter(article => article.id !== id));
+  };
+  const decrementArticle = (id: number) => {
+    setArticles((prev) => prev.map((article) => (article.id===id?{...article, quantity: article.quantity-1}:article)));
+  };
+  const incrementArticle = (id: number) => {
+    setArticles((prev) => prev.map((article) => (article.id===id?{...article, quantity: article.quantity+1}:article)));
+  };
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar />
+      <ArticleList article={articles} increment={incrementArticle} decrement={decrementArticle} remove={removeArticle} />
+      <AddArticleForm add={addArticle} />
     </div>
   );
 }
